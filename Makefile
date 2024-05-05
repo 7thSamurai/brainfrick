@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-DEPS = 
-OBJ = main.o 
+DEPS = interpreter.h
+OBJ = main.o interpreter.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)

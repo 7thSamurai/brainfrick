@@ -1,6 +1,8 @@
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+#include "interpreter.h"
 
 int main(int argc, char **argv)
 {
@@ -41,6 +43,12 @@ int main(int argc, char **argv)
     char *buffer = malloc(size);
     fread(buffer, sizeof(char), size, file);
     fclose(file);
+
+    // Create the interpreter from the program data
+    InterpreterState *state = createInterpreter(buffer, size);
+
+    // Clean up
+    deleteInterpreter(state);
 
     return 0;
 }
