@@ -42,7 +42,7 @@ InterpreterState *createInterpreter(const char *programBuffer, unsigned int prog
             // Make sure that the jump stack is not full
             if (jumpStackPointer >= jumpStackSize)
             {
-                printf("Exceeded the interpreter's maximum allowed number of nested jumps (max %u)", jumpStackSize);
+                printf("Exceeded the interpreter's maximum allowed number of nested jumps (max %u)\n", jumpStackSize);
 
                 deleteInterpreter(state);
                 return NULL;
@@ -75,9 +75,9 @@ InterpreterState *createInterpreter(const char *programBuffer, unsigned int prog
     // Make sure that all the jump brackets were closed
     if (jumpStackPointer)
     {
-        while (jumpStackPointer--)
+        for (unsigned int i = 0; i < jumpStackPointer; i++)
         {
-            printf("Missing closing bracket. Opening bracket at position 0x%x\n", jumpStack[jumpStackPointer]);
+            printf("Missing closing bracket. Opening bracket at position 0x%x\n", jumpStack[i]);
         }
 
         deleteInterpreter(state);
@@ -114,11 +114,29 @@ int runInterpreter(InterpreterState *state)
     // Increment Data Pointer
     case '>':
         state->dataPointer++;
+
+        // Grow the data array if we've reached the end
+        if (state->dataPointer >= state->dataSize)
+        {
+            state->dataSize += INITIAL_DATA_SIZE; // Grow by the initial data size
+            state->data = realloc(state->data, state->dataSize);
+            memset(state->data + state->dataPointer, 0x00, INITIAL_DATA_SIZE);
+        }
         break;
 
     // Decrement Data Pointer
     case '<':
-        state->dataPointer--;
+         // Wrap around if we're already at the beginning of the array
+        if (state->dataPointer == 0)
+        {
+            state->dataPointer = state->dataSize - 1;
+        }
+
+        else
+        {
+            state->dataPointer--;
+        }
+        
         break;
 
     // Increment byte at Data Pointer
