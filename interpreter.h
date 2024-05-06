@@ -2,11 +2,20 @@
 
 #include <stdint.h>
 
+// A single instruction
+typedef struct
+{
+    char command;
+
+    // Only used for Jump commands
+    unsigned int jumpTarget;
+} Instruction;
+
 // Interpreter state information
 typedef struct
 {
     // Input program data
-    char *program;
+    Instruction *program;
     unsigned int programSize;
 
     // Working data array
@@ -19,8 +28,9 @@ typedef struct
 
 } InterpreterState;
 
-// Creates a interpreter state (Takes ownership of the program array)
-InterpreterState *createInterpreter(char *programBuffer, unsigned int programBufferSize);
+// Creates a interpreter state
+// Returns NULL on error
+InterpreterState *createInterpreter(const char *programBuffer, unsigned int programBufferSize);
 
 // Deletes a interpreter state
 void deleteInterpreter(InterpreterState *state);
