@@ -36,16 +36,24 @@ int main(int argc, char **argv)
 
     // Find the file's size
     fseek(file, 0, SEEK_END);
-    int size = ftell(file);
+    size_t size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
     // And read it's contents
     char *buffer = malloc(size);
-    fread(buffer, sizeof(char), size, file);
+    if (fread(buffer, sizeof(char), size, file) != size)
+    {
+        printf("Failed to read file \"%s\"\n", path);
+        fclose(file);
+
+        return 1;
+    }
+
     fclose(file);
 
     // Create the interpreter from the program data
     InterpreterState *state = createInterpreter(buffer, size);
+    
     free(buffer);
     if (!state)
         return 1;

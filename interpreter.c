@@ -30,8 +30,6 @@ InterpreterState *createInterpreter(const char *programBuffer, unsigned int prog
     unsigned int jumpStack[jumpStackSize];
     unsigned int jumpStackPointer = 0;
 
-
-
     // Copy over the program data
     for (unsigned int pos = 0; pos < programBufferSize; pos++)
     {

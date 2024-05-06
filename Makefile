@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -O3
 DEPS = interpreter.h
 OBJ = main.o interpreter.o
 
