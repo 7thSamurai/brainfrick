@@ -34,3 +34,10 @@ InterpreterState *createInterpreter(const char *programBuffer, unsigned int prog
 
 // Deletes a interpreter state
 void deleteInterpreter(InterpreterState *state);
+
+// Runs the interpreter for once cycle
+// Returns:
+// - 0 if program has ended
+// - <0 on error
+// - >0 if program is still running
+int runInterpreter(InterpreterState *state);

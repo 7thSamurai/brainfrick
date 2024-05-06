@@ -46,6 +46,28 @@ int main(int argc, char **argv)
 
     // Create the interpreter from the program data
     InterpreterState *state = createInterpreter(buffer, size);
+    free(buffer);
+    if (!state)
+        return 1;
+
+    // Main loop
+    while (1)
+    {
+        // Run the interpreter for once cycle
+        int status = runInterpreter(state);
+
+        // Error encountered
+        if (status < 0)
+        {
+            deleteInterpreter(state);
+            return 1;
+        }
+
+        // Program ended
+        else if (!status)
+            break;
+
+    }
 
     // Clean up
     deleteInterpreter(state);

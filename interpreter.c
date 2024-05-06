@@ -103,3 +103,74 @@ void deleteInterpreter(InterpreterState *state)
         free(state);
     }
 }
+
+int runInterpreter(InterpreterState *state)
+{
+    // Grab the current command
+    unsigned int position = state->programCounter++;
+    Instruction instruction = state->program[position];
+
+    // Decode and execute the command
+    switch (instruction.command)
+    {
+    // Increment Data Pointer
+    case '>':
+        state->dataPointer++;
+        break;
+
+    // Decrement Data Pointer
+    case '<':
+        state->dataPointer--;
+        break;
+
+    // Increment byte at Data Pointer
+    case '+':
+        state->data[state->dataPointer]++;
+        break;
+
+    // Decrement byte at Data Pointer
+    case '-':
+        state->data[state->dataPointer]--;
+        break;
+
+    // Output byte at Data Pointer to IO
+    case '.':
+        putchar(state->data[state->dataPointer]);
+        break;
+
+    // Read byte from IO, storing at Data Pointer
+    case ',':
+        state->data[state->dataPointer] = getchar();
+        break;
+
+    // Jump forward if zero
+    case '[':
+        if (!state->data[state->dataPointer])
+        {
+            state->programCounter = instruction.jumpTarget;
+        }
+
+        break;
+
+    // Jump backward if nonzero
+    case ']':
+        if (state->data[state->dataPointer])
+        {
+            state->programCounter = instruction.jumpTarget;
+        }
+
+        break;
+
+    // Ignore all other characters
+    default:
+        break;
+    }
+
+    // Check if the program has ended
+    if (state->programCounter >= state->programSize)
+    {
+        return 0;
+    }
+
+    return 1;
+}
